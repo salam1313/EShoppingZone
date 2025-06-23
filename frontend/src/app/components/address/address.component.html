@@ -1,0 +1,21 @@
+<div class="address-modern-container">
+  <h2 class="address-title">Shipping Address</h2>
+  <form *ngIf="editing" (ngSubmit)="saveAddress()" class="address-form">
+    <label for="address" class="address-label">Full Address</label>
+    <textarea [(ngModel)]="address" name="address" id="address" placeholder="Enter your shipping address" required rows="3" class="address-input"></textarea>
+    <div class="address-actions">
+      <button type="submit" class="address-btn primary">Save</button>
+      <button type="button" (click)="editing=false" class="address-btn">Cancel</button>
+    </div>
+  </form>
+  <div *ngIf="!editing" class="address-summary">
+    <div class="address-display">
+      <span class="address-label">Address:</span>
+      <span class="address-value">{{ address || 'No address provided yet.' }}</span>
+    </div>
+    <div class="address-actions">
+      <button (click)="edit()" class="address-btn primary">Edit Address</button>
+      <button type="button" class="address-btn proceed-btn" [disabled]="!address" (click)="proceedToCheckout()">Proceed to Checkout</button>
+    </div>
+  </div>
+</div>

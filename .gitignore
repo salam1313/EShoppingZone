@@ -1,0 +1,38 @@
+# .NET build
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Node modules
+frontend/node_modules/
+
+# Environment files
+*.env
+.env.*
+backend/appsettings.Development.json
+backend/appsettings.json
+
+# Logs
+*.log
+logs/
+
+# Angular build
+frontend/dist/
+frontend/.angular/cache/
+
+# Test coverage
+frontend/coverage/
+
+# Misc
+*.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# SMTP credentials (should be in .env, not in code)

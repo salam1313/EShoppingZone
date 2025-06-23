@@ -1,0 +1,56 @@
+<div class="order-history-page">
+  <h2>Your Order History</h2>
+  <div *ngIf="orderHistory.length === 0">No orders yet.</div>
+  <ul *ngIf="orderHistory.length > 0">
+    <li *ngFor="let order of orderHistory">
+      <div (click)="toggleOrder(order)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+        <span>
+          Order #{{ order.orderId }} - ₹{{ order.totalAmount }} - {{ order.paymentMethod }}<br>
+          <small>{{ order.orderDate | date:'short' }}</small>
+          <span class="order-status">Status: <strong>{{ order.status }}</strong></span>
+        </span>
+        <span style="font-size:18px;user-select:none;">{{ order.expanded ? '▲' : '▼' }}</span>
+      </div>
+      <div *ngIf="order.expanded" class="order-details-expanded">
+        <div class="order-items-table">
+          <div class="order-items-header">
+            <span>Product</span>
+            <span>Quantity</span>
+            <span>Unit Price</span>
+            <span>Total</span>
+          </div>
+          <div *ngFor="let item of order.items" class="order-items-row">
+            <span>{{ item.productName }}</span>
+            <span>{{ item.quantity }}</span>
+            <span>₹{{ item.unitPrice }}</span>
+            <span>₹{{ item.unitPrice * item.quantity }}</span>
+          </div>
+        </div>
+        <div class="order-total-row">
+          <strong>Total Bill: ₹{{ order.totalAmount }}</strong>
+        </div>
+        <div class="order-actions" *ngIf="canCancelOrder(order.status)">
+          <button 
+            class="cancel-btn" 
+            (click)="cancelOrder(order.orderId); $event.stopPropagation()"
+            type="button">
+            Cancel Order
+          </button>
+        </div>
+      </div>    </li>
+  </ul>
+  <!-- Confirmation Modal -->
+  <app-confirmation-modal
+    [isVisible]="showCancelModal"
+    title="Cancel Order"
+    message="Are you sure you want to cancel this order? This action cannot be undone. If you paid via wallet, the amount will be refunded to your wallet."
+    confirmText="Yes, Cancel Order"
+    cancelText="Keep Order"
+    confirmButtonClass="btn-danger"
+    (confirmed)="onCancelConfirmed()"
+    (cancelled)="onCancelModalClosed()">
+  </app-confirmation-modal>
+
+  <!-- Toast Notifications -->
+  <app-toast></app-toast>
+</div>

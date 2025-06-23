@@ -1,0 +1,31 @@
+<div class="show-categories-container">
+  <h3>📂 Product Categories</h3>
+  <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+  <div *ngIf="!errorMessage">
+    <div *ngIf="categories.length === 0" class="empty-categories">
+      <div class="empty-categories-icon">🗂️</div>
+      <div>No categories found.</div>
+    </div>
+    <div class="categories-grid" *ngIf="categories.length > 0">
+      <div class="category-card" *ngFor="let cat of categories">
+        <div class="category-header">
+          <span class="category-main-icon">🏷️</span>
+          <span class="category-title">{{ cat.name }}</span>
+          <span class="cat-id">(ID: {{ cat.categoryId }})</span>
+          <button class="delete-category-btn" (click)="deleteCategory(cat.categoryId)" title="Delete Category">
+            <span aria-hidden="true">🗑️</span>
+          </button>
+        </div>
+        <div class="subcategory-list" *ngIf="cat.subcategories?.length > 0">
+          <div class="subcategory-chip" *ngFor="let sub of cat.subcategories">
+            <span class="subcategory-name">{{ sub.name }}</span>
+            <span class="sub-id">(ID: {{ sub.subcategoryId }})</span>
+          </div>
+        </div>
+        <div *ngIf="!cat.subcategories || cat.subcategories.length === 0" class="subcategory-list empty">
+          No subcategories.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

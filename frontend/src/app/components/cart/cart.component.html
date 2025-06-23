@@ -1,0 +1,34 @@
+<div class="cart-container">
+  <h2>Your Cart</h2>
+  <div *ngIf="cartItems.length === 0" class="empty-cart">
+    <div class="empty-cart-icon" aria-label="Empty Cart">🛒</div>
+    <div>Your cart is empty.</div>
+  </div>
+  <div *ngFor="let item of cartItems" class="cart-item-card" [class.removing]="updatingQty[item.cartItemId]">
+    <div class="cart-item-img-wrap">
+      <img [src]="item.productImage" alt="{{ item.productName }}">
+    </div>
+    <div class="cart-item-info">
+      <div class="cart-item-title">{{ item.productName }}</div>
+      <div class="cart-item-price">₹{{ item.unitPrice }}</div>
+      <div class="cart-item-qty">
+        <label>Qty:</label>
+        <button class="quantity-btn minus" (click)="decrement(item)" [disabled]="item.quantity <= 1 || updatingQty[item.cartItemId]">-</button>
+        <span class="cart-qty-value">{{ item.quantity }}</span>
+        <button class="quantity-btn plus" (click)="increment(item)" [disabled]="item.quantity >= item.stock || updatingQty[item.cartItemId]">+</button>
+        <span *ngIf="updatingQty[item.cartItemId]" class="cart-qty-spinner" aria-label="Updating quantity..."></span>
+        <div *ngIf="getQtyErrorMsg(item)" class="qty-error-msg">{{ getQtyErrorMsg(item) }}</div>
+      </div>
+      <div class="cart-item-subtotal">Subtotal: ₹{{ getSubtotal(item) }}</div>
+    </div>
+    <button class="remove-btn" (click)="removeItem(item)" [disabled]="updatingQty[item.cartItemId]" title="Remove from cart">
+      <span>&times;</span>
+    </button>
+  </div>
+  <div class="cart-summary-bar" *ngIf="cartItems.length > 0">
+    <div class="cart-total-label">Total:</div>
+    <div class="cart-total-value">₹{{ total.toFixed(2) }}</div>
+    <button class="checkout-btn" (click)="goToCheckout()" [disabled]="hasInvalidItem || isAnyItemUpdating">Proceed to Checkout</button>
+    <button class="clear-cart-btn" (click)="clearCart()" [disabled]="cartItems.length === 0">Clear Cart</button>
+  </div>
+</div>

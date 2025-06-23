@@ -1,0 +1,23 @@
+<!-- Modern e-commerce wallet transactions page -->
+<div class="wallet-transactions-container">
+  <div class="wallet-transactions-card">
+    <div class="wallet-transactions-header">
+      <span class="wallet-transactions-title">Recent Wallet Transactions</span>
+      <a class="wallet-transactions-back" routerLink="/" title="Back to Wallet">&larr; Back</a>
+    </div>
+    <ul class="wallet-transactions-list">
+      <li *ngIf="isLoading" class="wallet-transactions-empty">Loading...</li>
+      <li class="wallet-transactions-item" *ngFor="let tx of recentTransactions">
+        <span class="wallet-transactions-type" [ngClass]="{'credit': tx.type === 'credit', 'debit': tx.type === 'debit'}">
+          {{ tx.type === 'credit' ? '+' : '-' }}₹{{ tx.amount }}
+        </span>
+        <span class="wallet-transactions-desc">{{ tx.description }}</span>
+        <span class="wallet-transactions-date">
+          {{ tx.date | date:'mediumDate' }}<br>
+          <span class="wallet-transactions-time">{{ tx.date | date:'shortTime' }}</span>
+        </span>
+      </li>
+      <li *ngIf="!isLoading && !recentTransactions?.length" class="wallet-transactions-empty">No transactions yet.</li>
+    </ul>
+  </div>
+</div>

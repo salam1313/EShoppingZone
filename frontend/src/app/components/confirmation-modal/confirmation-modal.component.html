@@ -1,0 +1,34 @@
+<div class="modal-backdrop" 
+     [class.visible]="isVisible"
+     (click)="onBackdropClick($event)"
+     *ngIf="isVisible">
+  <div class="modal-container" [class.show]="isVisible">
+    <div class="modal-header">
+      <h3 class="modal-title">{{ title }}</h3>
+      <button class="close-button" (click)="onCancel()" type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="icon-container">
+        <svg class="warning-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 0 0 3.64 21H20.36A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z" 
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <p class="modal-message">{{ message }}</p>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="onCancel()" type="button">
+        {{ cancelText }}
+      </button>
+      <button class="btn" [class]="confirmButtonClass" (click)="onConfirm()" type="button">
+        {{ confirmText }}
+      </button>
+    </div>
+  </div>
+</div>

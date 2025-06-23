@@ -1,0 +1,40 @@
+<p>product-details works!</p>
+<div class="product-details-container">
+  <img [src]="product.mainImageUrl || product.image" alt="{{ product.name }}">
+  <div class="details">
+    <h2>{{ product.name }}</h2>
+    <p>{{ product.description }}</p>
+    <div class="price">Price: ₹{{ product.price }}</div>
+    <div>
+      <label>Category ID:</label>
+      <input type="text" [(ngModel)]="product.categoryId" placeholder="Category ID">
+    </div>
+    <div>
+      <label>Subcategory ID:</label>
+      <input type="text" [(ngModel)]="product.subcategoryId" placeholder="Subcategory ID">
+    </div>
+    <div>
+      <label>Main Image URL:</label>
+      <input type="text" [(ngModel)]="product.mainImageUrl" placeholder="Main Image URL">
+    </div>
+    <div>
+      <label>Additional Image URLs (comma separated):</label>
+      <input type="text" [(ngModel)]="product.imageUrlsString" placeholder="Image URLs">
+    </div>
+    <div *ngFor="let variant of product.variants; let i = index">
+      <h4>Variant {{ i + 1 }}</h4>
+      <label>Quantity:</label>
+      <input type="number" [(ngModel)]="variant.quantity" min="1">
+      <label>Price:</label>
+      <input type="number" [(ngModel)]="variant.price" min="0">
+      <label>Attributes (key:value, comma separated):</label>
+      <input type="text" [(ngModel)]="variant.attributesString" placeholder="color:red,size:M">
+    </div>
+    <div *ngIf="validationErrors.length > 0" class="product-error" style="color:#e53e3e; margin-bottom:0.7rem; font-weight:500; text-align:center;">
+      <ul style="margin:0; padding-left:1.2em;">
+        <li *ngFor="let err of validationErrors">{{ err }}</li>
+      </ul>
+    </div>
+    <button (click)="addToCart()">Add to Cart</button>
+  </div>
+</div>

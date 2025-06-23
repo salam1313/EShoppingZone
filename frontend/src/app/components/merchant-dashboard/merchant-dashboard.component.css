@@ -1,0 +1,39 @@
+.merchant-dashboard-container {
+  max-width: 700px;
+  margin: 2.5rem auto;
+  background: #f9fafb;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 18px rgba(49,130,206,0.13);
+  padding: 2.5rem 2rem 2.5rem 2rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+.merchant-dashboard-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #234e52;
+  margin-bottom: 2rem;
+}
+.merchant-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+.merchant-actions button {
+  background: linear-gradient(90deg, #3182ce 0%, #38a169 100%);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.8rem 2rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(49,130,206,0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.merchant-actions button:hover {
+  background: linear-gradient(90deg, #2563eb 0%, #2f855a 100%);
+  box-shadow: 0 4px 16px rgba(56,161,105,0.10);
+}

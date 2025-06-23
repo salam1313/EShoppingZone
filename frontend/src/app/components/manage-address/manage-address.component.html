@@ -1,0 +1,43 @@
+<div class="manage-address-container">
+  <h2>Manage Addresses</h2>
+  <div *ngIf="addresses.length === 0" class="no-addresses">
+    <p>No saved addresses found.</p>
+    <button class="btn-primary" (click)="openAddAddress()">Add New Address</button>
+  </div>
+  <div *ngIf="addresses.length > 0" class="address-list">
+    <div *ngFor="let address of addresses; let i = index" class="address-card" [class.selected]="selectedIndex === i">
+      <div class="address-details">
+        <div><b>{{ address.name }}</b></div>
+        <div>{{ address.addressLine1 }}</div>
+        <div *ngIf="address.addressLine2">{{ address.addressLine2 }}</div>
+        <div>{{ address.city }}, {{ address.state }} {{ address.zipCode }}</div>
+        <div>{{ address.country }}</div>
+        <div>Phone: {{ address.phone }}</div>
+      </div>
+      <div class="address-actions">
+        <button (click)="editAddress(i)">Edit</button>
+        <button (click)="deleteAddress(i)">Delete</button>
+      </div>
+    </div>
+    <button class="btn-primary add-btn" (click)="openAddAddress()">Add New Address</button>
+  </div>
+
+  <!-- Address Form Modal -->
+  <div *ngIf="showForm" class="address-modal">
+    <form (ngSubmit)="saveAddress()" class="address-form">
+      <h3>{{ editingIndex === -1 ? 'Add New Address' : 'Edit Address' }}</h3>
+      <input [(ngModel)]="form.name" name="name" placeholder="Full Name" required />
+      <input [(ngModel)]="form.addressLine1" name="addressLine1" placeholder="Address Line 1" required />
+      <input [(ngModel)]="form.addressLine2" name="addressLine2" placeholder="Address Line 2" />
+      <input [(ngModel)]="form.city" name="city" placeholder="City" required />
+      <input [(ngModel)]="form.state" name="state" placeholder="State" required />
+      <input [(ngModel)]="form.zipCode" name="zipCode" placeholder="Zip Code" required />
+      <input [(ngModel)]="form.country" name="country" placeholder="Country" required />
+      <input [(ngModel)]="form.phone" name="phone" placeholder="Phone" required />
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save</button>
+        <button type="button" (click)="closeForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<!-- Modern e-commerce wallet UI -->
+<div class="wallet-ec-container">
+  <div class="wallet-ec-card">
+    <div class="wallet-ec-header">
+      <div class="wallet-ec-brand">
+        <span class="wallet-ec-logo">💳</span>
+        <span class="wallet-ec-title">E-Wallet</span>
+      </div>
+      <button class="wallet-ec-close" (click)="$event.preventDefault(); onClose()" aria-label="Close wallet">✕</button>
+    </div>
+    <div class="wallet-ec-balance-section">
+      <div class="wallet-ec-balance-label">Wallet Balance</div>
+      <div #balanceElement class="wallet-ec-balance" [class.updating]="isLoading">
+        ₹{{ balance !== null ? balance.toLocaleString('en-IN') : (isLoading ? 'Loading...' : 'Unavailable') }}
+      </div>
+    </div>
+    <div class="wallet-ec-actions">
+      <form class="wallet-ec-form" (ngSubmit)="addFunds()" [attr.aria-busy]="isAddingFunds">
+        <input type="number" [(ngModel)]="amount" name="amount" placeholder="Add money" min="1" step="0.01" [disabled]="isLoading || isAddingFunds">
+        <button type="submit" [disabled]="isAddFundsDisabled()" [class.loading]="isAddingFunds">{{ isAddingFunds ? 'Adding...' : 'Add Money' }}</button>
+      </form>
+    </div>
+    <div class="wallet-ec-messages">
+      <div *ngIf="payMessage && !payError" class="wallet-ec-success">{{ payMessage }}</div>
+      <div *ngIf="payMessage && payError" class="wallet-ec-error">{{ payMessage }}</div>
+    </div>
+    <div class="wallet-ec-history-section">
+      <button class="wallet-ec-history-link" (click)="goToTransactions()">View Recent Transactions &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- Screen reader only styles -->
+<style>
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>

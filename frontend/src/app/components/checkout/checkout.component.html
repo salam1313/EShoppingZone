@@ -1,0 +1,122 @@
+<!-- Modern Checkout Page -->
+<div class="checkout-fresh-wrapper">
+  <div class="checkout-fresh-card">
+    <h2 class="checkout-fresh-title">Checkout</h2>
+    <form class="checkout-fresh-form">
+      <!-- Step 1: Product Details & Total -->
+      <div class="checkout-fresh-section">
+        <h3 class="checkout-fresh-section-title">Order Summary</h3>
+        <div class="checkout-fresh-items">
+          <div *ngFor="let item of cartItems" class="checkout-fresh-item">
+            <img *ngIf="item.imageUrl" [src]="item.imageUrl" class="checkout-fresh-item-img" alt="Product image">
+            <div class="checkout-fresh-item-info">
+              <span class="checkout-fresh-item-name">{{ item.name }}</span>
+              <span class="checkout-fresh-item-variant" *ngIf="item.variantName">({{ item.variantName }})</span>
+              <span class="checkout-fresh-item-qty">x{{ item.quantity }}</span>
+            </div>
+            <div class="checkout-fresh-item-price">₹{{ item.price }}</div>
+          </div>
+        </div>
+        <div class="checkout-fresh-total">
+          <span>Total:</span>
+          <span>₹{{ cartTotal | number:'1.2-2' }}</span>
+        </div>
+      </div>      <!-- Step 2: Address Selection -->
+      <div class="checkout-fresh-section" [class.address-required]="!isAddressSelectedOrFilled">
+        <h3 class="checkout-fresh-section-title">
+          Delivery Address 
+          <span *ngIf="!isAddressSelectedOrFilled" class="required-indicator">*Required</span>
+        </h3>
+        <div *ngIf="savedAddresses.length > 0" class="checkout-fresh-address-list">
+          <div *ngFor="let address of savedAddresses; let i = index" class="checkout-fresh-address-card" [class.selected]="selectedAddressIndex === i" (click)="selectSavedAddress(i)">
+            <div class="checkout-fresh-address-main">{{ address.name }} - {{ address.addressLine1 }}, {{ address.city }}, {{ address.state }} {{ address.zipCode }}, {{ address.country }}</div>
+            <div class="checkout-fresh-address-phone">📞 {{ address.phone }}</div>
+            <button type="button" class="checkout-fresh-delete-address" (click)="deleteSavedAddress(i); $event.stopPropagation()">Delete</button>
+          </div>
+        </div>
+        <button type="button" class="checkout-fresh-btn-outline" (click)="showNewAddressForm = true; clearAddressForm(); scrollToAddressForm()">Add New Address</button>
+        <div *ngIf="showNewAddressForm || savedAddresses.length === 0" class="checkout-fresh-new-address-form new-address-form">
+          <input type="text" [(ngModel)]="addressName" name="addressName" placeholder="Address Name (e.g. Home, Office)" class="checkout-fresh-input" />
+          <input type="text" [(ngModel)]="fullName" name="fullName" placeholder="Full Name" class="checkout-fresh-input" />
+          <input type="text" [(ngModel)]="addressLine1" name="addressLine1" placeholder="Address Line 1" class="checkout-fresh-input" />
+          <input type="text" [(ngModel)]="addressLine2" name="addressLine2" placeholder="Address Line 2 (optional)" class="checkout-fresh-input" />
+          <input type="text" [(ngModel)]="city" name="city" placeholder="City" class="checkout-fresh-input" />
+          <input type="text" [(ngModel)]="state" name="state" placeholder="State" class="checkout-fresh-input" />
+          <input type="text" [(ngModel)]="zipCode" name="zipCode" placeholder="ZIP/Postal Code" class="checkout-fresh-input" />
+          <input type="text" [(ngModel)]="country" name="country" placeholder="Country" class="checkout-fresh-input" />
+          <input type="tel" [(ngModel)]="phone" name="phone" placeholder="Phone Number" class="checkout-fresh-input" maxlength="10" pattern="[0-9]*" inputmode="numeric" (input)="onPhoneInput($event)" />
+          <div class="validation-message" *ngIf="addressValidationMessage">
+            {{ addressValidationMessage }}
+          </div>
+          <button type="button" class="checkout-fresh-btn" (click)="saveCurrentAddress()">Save Address</button>
+        </div>
+      </div>
+      <!-- Step 3: Checkout Button -->
+      <div class="checkout-fresh-section">
+        <h3 class="checkout-fresh-section-title">Payment & Place Order</h3>
+        <div class="checkout-fresh-payment-methods">
+          <label class="checkout-fresh-radio">
+            <input type="radio" [(ngModel)]="paymentMethod" name="paymentMethod" value="COD"> Cash on Delivery
+          </label>
+          <label class="checkout-fresh-radio">
+            <input type="radio" [(ngModel)]="paymentMethod" name="paymentMethodOnline" value="ONLINE"> Pay Online (Razorpay)
+          </label>
+          <label class="checkout-fresh-radio">
+            <input type="radio" [(ngModel)]="paymentMethod" name="paymentMethodWallet" value="WALLET"> Pay with Wallet
+          </label>
+        </div>        <!-- Address validation message -->
+        <div *ngIf="!isAddressSelectedOrFilled && !processing" class="checkout-address-warning">
+          ⚠️ Please select a saved address or fill in delivery details to continue
+          <div *ngIf="addressValidationMessage && showNewAddressForm" class="validation-detail">
+            {{ addressValidationMessage }}
+          </div>
+        </div>
+        
+        <button type="button" class="checkout-fresh-btn checkout-fresh-place-order" (click)="placeOrder()" [disabled]="processing || !isAddressSelectedOrFilled || cartItems.length === 0">
+          <span *ngIf="!processing && isAddressSelectedOrFilled">Checkout</span>
+          <span *ngIf="!processing && !isAddressSelectedOrFilled">{{ addressValidationMessage || 'Enter Address to Checkout' }}</span>
+          <span *ngIf="processing" class="checkout-fresh-processing">Processing...</span>
+        </button>
+        <!-- Wallet Payment Modal -->
+        <div *ngIf="showWalletPayModal" class="wallet-pay-modal">
+          <div class="wallet-pay-modal-content">
+            <h3>Pay with Wallet</h3>
+            <div class="wallet-pay-balance">Wallet Balance: ₹{{ walletBalance }}</div>
+            <div class="wallet-pay-amount">Amount to Pay: ₹{{ cartTotal }}</div>
+            <div *ngIf="walletBalance < cartTotal" class="wallet-pay-error">Not enough funds in wallet.</div>
+            <div class="wallet-pay-actions">
+              <button class="wallet-pay-btn" (click)="confirmWalletPayment()" [disabled]="walletBalance < cartTotal">Yes, Pay</button>
+              <button class="wallet-pay-btn wallet-pay-cancel" (click)="cancelWalletPayment()">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="paymentSuccess" class="checkout-fresh-success-msg">{{ paymentSuccessMessage }}</div>
+        <div *ngIf="paymentError" class="checkout-fresh-error-msg">{{ paymentError }}</div>
+        <div *ngIf="walletError" class="checkout-fresh-error-msg">{{ walletError }}</div>
+        <div *ngIf="validationErrors.length > 0" class="checkout-fresh-error-msg">
+          <ul>
+            <li *ngFor="let error of validationErrors">{{ error }}</li>
+          </ul>
+        </div>
+        <div *ngIf="showWalletAnimation" class="wallet-animation-container">
+          <div class="wallet-animation">
+            <span class="wallet-animation-icon">💸</span>
+            <span class="wallet-animation-text">Deducting ₹{{ cartTotal | number:'1.2-2' }} from wallet...</span>
+          </div>
+          <div class="wallet-animation-balance">
+            Remaining Balance: <span class="wallet-animation-balance-amount">₹{{ animatedWalletBalance | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- Razorpay Modal -->
+  <div *ngIf="showRazorpayModal" class="checkout-fresh-razorpay-modal">
+    <div class="checkout-fresh-razorpay-content">
+      <h3>Pay with Razorpay</h3>
+      <div *ngIf="processing" class="checkout-fresh-spinner"></div>
+      <button class="checkout-fresh-btn checkout-fresh-razorpay-btn" (click)="simulateRazorpayPayment()" [disabled]="processing">Pay Now</button>
+      <button class="checkout-fresh-btn-outline" (click)="closeRazorpayModal()" [disabled]="processing">Cancel</button>
+    </div>
+  </div>
+</div>

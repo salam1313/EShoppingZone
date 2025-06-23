@@ -1,0 +1,16 @@
+<div class="merchant-dashboard-container">
+  <h2>Merchant Dashboard</h2>  <div class="merchant-actions">
+    <button (click)="openAddProduct()">Add Product</button>
+    <button (click)="openShowCategories()">Show Categories</button>
+    <button (click)="openInventory()">Manage Inventory</button>
+    <button (click)="openAddCategory()">Manage Categories</button>
+    <button (click)="openManageOrders()">Manage Orders</button>
+    <button (click)="openMyProducts()">My Products</button>
+  </div>
+  <app-add-product *ngIf="showAddProduct" (close)="closeAll()"></app-add-product>
+  <app-show-categories *ngIf="showCategories" (close)="closeAll()"></app-show-categories>
+  <app-manage-inventory *ngIf="showInventory"></app-manage-inventory>
+  <app-add-category *ngIf="showAddCategory"></app-add-category>
+  <app-manage-orders *ngIf="showManageOrders"></app-manage-orders>
+  <app-my-products *ngIf="showMyProducts"></app-my-products>
+</div>

@@ -1,0 +1,87 @@
+/* Modern Address Page Styles */
+.address-modern-container {
+  max-width: 430px;
+  margin: 2.5rem auto;
+  background: #f9fafb;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+  padding: 2.2rem 2rem 2.5rem 2rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+.address-title {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2d3748;
+  text-align: center;
+}
+.address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.address-label {
+  font-weight: 500;
+  color: #4a5568;
+  margin-bottom: 0.3rem;
+}
+.address-input {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  border: 1.5px solid #c3dafc;
+  font-size: 1rem;
+  resize: vertical;
+  background: #fff;
+  margin-bottom: 0.5rem;
+}
+.address-actions {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+.address-btn {
+  padding: 0.55rem 1.3rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: #e2e8f0;
+  color: #2d3748;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.address-btn.primary {
+  background: #3182ce;
+  color: #fff;
+}
+.address-btn.primary:hover {
+  background: #2563eb;
+}
+.address-btn.proceed-btn {
+  background: #38a169;
+  color: #fff;
+}
+.address-btn.proceed-btn:disabled {
+  background: #a0aec0;
+  color: #fff;
+  cursor: not-allowed;
+}
+.address-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: flex-start;
+}
+.address-display {
+  background: #edf2f7;
+  padding: 1rem;
+  border-radius: 0.6rem;
+  width: 100%;
+  font-size: 1.05rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+.address-value {
+  margin-left: 0.5rem;
+  font-weight: 500;
+}

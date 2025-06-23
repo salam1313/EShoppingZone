@@ -1,0 +1,147 @@
+<div class="manage-orders-container">
+  <h3>Manage Orders</h3>
+
+  <!-- Orders Summary -->
+  <div class="orders-summary" *ngIf="ordersSummary">
+    <div class="summary-cards">
+      <div class="summary-card total">
+        <h4>Total Orders</h4>
+        <span class="count">{{ ordersSummary.totalOrders }}</span>
+      </div>
+      <div class="summary-card pending">
+        <h4>Pending</h4>
+        <span class="count">{{ ordersSummary.pendingOrders }}</span>
+      </div>
+      <div class="summary-card ready">
+        <h4>Ready to Dispatch</h4>
+        <span class="count">{{ ordersSummary.readyToDispatchOrders }}</span>
+      </div>
+      <div class="summary-card transit">
+        <h4>In Transit</h4>
+        <span class="count">{{ ordersSummary.inTransitOrders }}</span>
+      </div>
+      <div class="summary-card delivered">
+        <h4>Delivered</h4>
+        <span class="count">{{ ordersSummary.deliveredOrders }}</span>
+      </div>
+      <div class="summary-card cancelled">
+        <h4>Cancelled</h4>
+        <span class="count">{{ ordersSummary.cancelledOrders }}</span>
+      </div>
+      <div class="summary-card revenue">
+        <h4>Total Revenue</h4>
+        <span class="amount">₹{{ ordersSummary.totalRevenue.toFixed(2) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label for="statusFilter">Filter by Status:</label>
+      <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onStatusFilterChange()">
+        <option value="All">All Statuses</option>
+        <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="searchQuery">Search:</label>
+      <input 
+        id="searchQuery" 
+        type="text" 
+        placeholder="Search by Order ID, Customer Name..." 
+        [(ngModel)]="searchQuery" 
+        (input)="onSearchQueryChange()">
+    </div>
+    
+    <button class="refresh-btn" (click)="loadOrders()">Refresh</button>
+  </div>
+
+  <!-- Messages -->
+  <div *ngIf="success" class="success-msg">{{ success }}</div>
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+  <div *ngIf="loading" class="loading-msg">Loading orders...</div>
+
+  <!-- Orders List -->
+  <div class="orders-list" *ngIf="!loading">
+    <div *ngIf="filteredOrders.length === 0" class="no-orders">
+      No orders found matching your criteria.
+    </div>
+    
+    <div *ngFor="let order of filteredOrders" class="order-card">
+      <div class="order-header" (click)="expandOrder(order)">
+        <div class="order-basic-info">
+          <h4>Order #{{ order.orderId }}</h4>
+          <div class="order-meta">
+            <span class="customer">{{ order.fullName }} ({{ order.userName }})</span>
+            <span class="date">{{ formatDate(order.orderDate) }}</span>
+            <span class="amount">₹{{ order.totalAmount.toFixed(2) }}</span>
+            <span class="payment-method">{{ order.paymentMethod }}</span>
+          </div>
+        </div>
+        
+        <div class="order-status-section">
+          <div class="current-status">
+            <span class="status-badge" [class]="getStatusBadgeClass(order.status)">
+              {{ order.status }}
+            </span>
+          </div>          <div class="status-actions">
+            <select 
+              class="status-select" 
+              [value]="order.status" 
+              (change)="onStatusChange(order.orderId, $event)"
+              (click)="$event.stopPropagation()"
+              [disabled]="order.status === 'Delivered' || order.status === 'Cancelled'">
+              <option *ngFor="let status of statusOptions" [value]="status">
+                {{ status }}
+              </option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="expand-icon">
+          <span [class.expanded]="order.expanded">▼</span>
+        </div>
+      </div>
+
+      <!-- Order Details (Expandable) -->
+      <div class="order-details" *ngIf="order.expanded">
+        <div class="shipping-address">
+          <h5>Shipping Address</h5>
+          <div class="address">
+            <p>{{ order.fullName }}</p>
+            <p>{{ order.addressLine1 }}</p>
+            <p *ngIf="order.addressLine2">{{ order.addressLine2 }}</p>
+            <p>{{ order.city }}, {{ order.state }} {{ order.zipCode }}</p>
+            <p>{{ order.country }}</p>
+            <p>Phone: {{ order.phone }}</p>
+          </div>
+        </div>
+
+        <div class="order-items">
+          <h5>Order Items</h5>
+          <div class="items-table">
+            <div class="item-header">
+              <span>Product</span>
+              <span>Quantity</span>
+              <span>Unit Price</span>
+              <span>Total</span>
+            </div>
+            <div *ngFor="let item of order.orderItems" class="item-row">
+              <div class="product-info">
+                <span class="product-name">{{ item.productName }}</span>
+                <span *ngIf="item.variantDetails" class="variant-details">{{ item.variantDetails }}</span>
+              </div>
+              <span class="quantity">{{ item.quantity }}</span>              <span class="unit-price">₹{{ item.price.toFixed(2) }}</span>
+              <span class="total-price">₹{{ item.totalPrice.toFixed(2) }}</span>
+            </div>
+            <div class="items-total">
+              <strong>Order Total: ₹{{ getOrderTotal(order).toFixed(2) }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

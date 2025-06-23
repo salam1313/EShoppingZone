@@ -1,0 +1,142 @@
+<div class="add-category-container">
+  <div class="header">
+    <h3>Category Management</h3>
+    <div class="tab-buttons">
+      <button 
+        [class.active]="activeTab === 'category'"
+        (click)="switchTab('category')"
+        class="tab-btn"
+      >
+        Add Category
+      </button>
+      <button 
+        [class.active]="activeTab === 'subcategory'"
+        (click)="switchTab('subcategory')"
+        class="tab-btn"
+      >
+        Add Subcategory
+      </button>
+    </div>
+  </div>
+
+  <!-- Add Category Tab -->
+  <div *ngIf="activeTab === 'category'" class="tab-content">
+    <div class="form-section">
+      <h4>Add New Category</h4>
+      
+      <form (ngSubmit)="addCategory()" #categoryFormRef="ngForm">
+        <div class="form-group">
+          <label for="categoryName">Category Name *</label>
+          <input 
+            type="text" 
+            id="categoryName"
+            name="categoryName"
+            [(ngModel)]="categoryForm.name"
+            placeholder="Enter category name"
+            class="form-input"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="categoryDescription">Description (Optional)</label>
+          <textarea 
+            id="categoryDescription"
+            name="categoryDescription"
+            [(ngModel)]="categoryForm.description"
+            placeholder="Enter category description"
+            class="form-input textarea"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <button 
+          type="submit" 
+          [disabled]="loading || !categoryForm.name.trim()"
+          class="submit-btn"
+        >
+          <span *ngIf="loading">Adding...</span>
+          <span *ngIf="!loading">Add Category</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Subcategory Tab -->
+  <div *ngIf="activeTab === 'subcategory'" class="tab-content">
+    <div class="form-section">
+      <h4>Add New Subcategory</h4>
+      
+      <form (ngSubmit)="addSubcategory()" #subcategoryFormRef="ngForm">
+        <div class="form-group">
+          <label for="parentCategory">Select Parent Category *</label>
+          <select 
+            id="parentCategory"
+            name="parentCategory"
+            [(ngModel)]="subcategoryForm.categoryId"
+            class="form-input"
+            required
+          >
+            <option value="">Choose a category...</option>
+            <option 
+              *ngFor="let category of categories" 
+              [value]="category.categoryId"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group" *ngIf="subcategoryForm.categoryId">
+          <div class="selected-category-info">
+            <small>Adding subcategory to: <strong>{{ getSelectedCategoryName() }}</strong></small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="subcategoryName">Subcategory Name *</label>
+          <input 
+            type="text" 
+            id="subcategoryName"
+            name="subcategoryName"
+            [(ngModel)]="subcategoryForm.name"
+            placeholder="Enter subcategory name"
+            class="form-input"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="subcategoryDescription">Description *</label>
+          <textarea 
+            id="subcategoryDescription"
+            name="subcategoryDescription"
+            [(ngModel)]="subcategoryForm.description"
+            placeholder="Enter subcategory description"
+            class="form-input textarea"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <button 
+          type="submit" 
+          [disabled]="loading || !subcategoryForm.categoryId || !subcategoryForm.name.trim() || !subcategoryForm.description.trim()"
+          class="submit-btn"
+        >
+          <span *ngIf="loading">Adding...</span>
+          <span *ngIf="!loading">Add Subcategory</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="successMessage" class="success-msg">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="error-msg">
+    {{ errorMessage }}
+  </div>
+</div>

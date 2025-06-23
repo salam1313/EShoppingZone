@@ -1,0 +1,143 @@
+<nav class="navbar">
+  <!-- Loading state while initializing -->
+  <div *ngIf="!isInitialized" class="nav-container">
+    <div class="nav-left">
+      <a routerLink="/" class="nav-brand">
+        <i class="brand-icon">🛍️</i>
+        E-Shopping Zone
+      </a>
+    </div>
+    <div class="nav-right">
+      <div class="loading-state">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Main navbar content after initialization -->
+  <div *ngIf="isInitialized" class="nav-container">
+    <div class="nav-left">
+      <a routerLink="/" class="nav-brand">
+        <i class="brand-icon">🛍️</i>
+        E-Shopping Zone
+      </a>
+    </div>
+    
+    <div class="nav-center">
+      <div class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+          <i class="nav-icon">🏠</i> Home
+        </a>
+        <a *ngIf="isLoggedIn && userRole !== 'merchant' && userRole !== 'Merchant'" routerLink="/cart" routerLinkActive="active" class="nav-link cart-link">
+          <i class="nav-icon">🛒</i> Cart
+        </a>
+        <a *ngIf="isLoggedIn && userRole !== 'merchant' && userRole !== 'Merchant'" routerLink="/order-history" routerLinkActive="active" class="nav-link">
+          <i class="nav-icon">📦</i> Orders
+        </a>
+        <a *ngIf="isLoggedIn && (userRole === 'merchant' || userRole === 'Merchant')" routerLink="/merchant" routerLinkActive="active" class="nav-link">
+          <i class="nav-icon">💼</i> Dashboard
+        </a>
+      </div>
+    </div>    
+    <div class="nav-right" *ngIf="isInitialized">   
+      <!-- Show when user is NOT logged in -->
+      <div *ngIf="!isLoggedIn" class="auth-buttons">
+        <a routerLink="/login" class="nav-link login-btn">
+          <i class="nav-icon">🔐</i> Login
+        </a>
+        <a routerLink="/register" class="nav-link register-btn">
+          <i class="nav-icon">📝</i> Register
+        </a>
+      </div>
+
+      <!-- Show when user IS logged in -->
+      <div *ngIf="isLoggedIn" class="user-section">
+        <!-- Wallet Balance (for non-merchants) -->
+        <div *ngIf="userRole !== 'merchant' && userRole !== 'Merchant'" class="wallet-display" (click)="openWalletModal()">
+          <i class="wallet-icon">💰</i>
+          <span class="wallet-balance">₹{{ walletBalance }}</span>
+        </div>
+
+        <!-- User Dropdown -->
+        <div class="user-dropdown-container">
+          <div class="user-info" (click)="toggleUserDropdown($event)">
+            <div class="user-avatar">{{ userRole === 'merchant' ? '🏪' : '👤' }}</div>
+            <div class="user-details">
+              <div class="user-name">{{ userName }}</div>
+              <div class="user-role">
+                <ng-container *ngIf="userRole?.toLowerCase() === 'merchant'; else userType">Merchant</ng-container>
+                <ng-template #userType>Customer</ng-template>
+              </div>
+            </div>
+            <i class="dropdown-arrow">▼</i>
+          </div>
+
+          <!-- Dropdown Menu -->
+          <div *ngIf="showUserDropdown" class="user-dropdown">
+            <ul class="dropdown-menu">
+              <li *ngIf="userRole !== 'merchant' && userRole !== 'Merchant'" (click)="openManageAddress()">
+                <i class="menu-icon">📍</i> Manage Addresses
+              </li>
+              <li *ngIf="userRole !== 'merchant' && userRole !== 'Merchant'" (click)="openWalletModal()">
+                <i class="menu-icon">💰</i> Wallet
+              </li>
+              <li *ngIf="userRole !== 'merchant' && userRole !== 'Merchant'" (click)="goToOrderHistory()">
+                <i class="menu-icon">📦</i> Order History
+              </li>
+              <li *ngIf="userRole === 'merchant' || userRole === 'Merchant'" (click)="goToMerchantDashboard()">
+                <i class="menu-icon">💼</i> Dashboard
+              </li>
+              <li class="divider"></li>
+              <li (click)="logout()" class="logout-item">
+                <i class="menu-icon">🚪</i> Logout
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Toggle (for future mobile responsiveness) -->
+  <div class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </div>
+</nav>
+
+<!-- Edit Address modal -->
+<div *ngIf="showEditAddressModal" class="wallet-modal">
+  <div class="wallet-content">
+    <h3>Edit Address</h3>
+    <form (ngSubmit)="saveAddress()">
+      <input [(ngModel)]="editAddress" name="editAddress" placeholder="Enter new address" required>
+      <button type="submit">Save</button>
+      <button type="button" (click)="closeEditAddressModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<!-- Wallet modal using enhanced wallet component -->
+<div *ngIf="showWalletModal" class="wallet-modal">
+  <div class="wallet-content wallet-pro-modal-content">
+    <app-wallet (close)="closeWalletModal()"></app-wallet>
+  </div>
+</div>
+
+<style>
+  .user-dropdown { position: absolute; background: #fff; border: 1px solid #ddd; border-radius: 0.5rem; min-width: 180px; box-shadow: 0 2px 8px rgba(0,0,0,0.13); z-index: 100; margin-top: 0.5rem; }
+  .dropdown-menu { list-style: none; margin: 0; padding: 0; }
+  .dropdown-menu li { padding: 0.7rem 1.2rem; cursor: pointer; transition: background 0.18s; color: #222; background: #fff; }
+  .dropdown-menu li:hover { background: #3182ce; color: #fff; }
+  .wallet-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+  .wallet-content { background: #fff; padding: 2rem 2.5rem; border-radius: 1rem; box-shadow: 0 2px 16px rgba(0,0,0,0.18); text-align: center; min-width: 300px; }
+  .wallet-pro-modal-content {
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    min-width: unset;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

@@ -1,0 +1,97 @@
+<div class="landing-container">
+  <header>
+    <!-- Removed ShopEase text for a cleaner look -->
+  </header>
+  <div class="search-sort-bar">
+    <select (change)="onCategorySelect($event)" [value]="selectedCategory ? categories.indexOf(selectedCategory) : ''">
+      <option value="">All Categories</option>
+      <option *ngFor="let cat of categories; let i = index" [value]="i">{{ cat.name }}</option>
+    </select>
+    <select *ngIf="selectedCategory && subcategories.length > 0" (change)="onSubcategorySelect($event)" [value]="selectedSubcategory ? subcategories.indexOf(selectedSubcategory) : ''">
+      <option value="">All Subcategories</option>
+      <option *ngFor="let sub of subcategories; let i = index" [value]="i">{{ sub.name }}</option>
+    </select>
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search products..." (input)="onSearchChange()">
+    <select [(ngModel)]="sortOption" (change)="onSortChange()">
+      <option value="">Sort By</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="name-asc">Name: A-Z</option>
+      <option value="name-desc">Name: Z-A</option>
+      <option value="stock-asc">Stock: Low to High</option>
+      <option value="stock-desc">Stock: High to Low</option>
+    </select>
+    <div class="filter-summary" *ngIf="selectedCategory || selectedSubcategory || searchTerm">
+      <span *ngIf="selectedCategory" class="filter-tag">{{ selectedCategory.name }} <button (click)="clearCategoryFilter()">×</button></span>
+      <span *ngIf="selectedSubcategory" class="filter-tag">{{ selectedSubcategory.name }} <button (click)="clearSubcategoryFilter()">×</button></span>
+      <span *ngIf="searchTerm" class="filter-tag">Search: "{{ searchTerm }}" <button (click)="clearSearchFilter()">×</button></span>
+      <button class="clear-all-filters" (click)="clearAllFilters()">Clear All</button>
+    </div>
+  </div>  
+  <section class="products-list-grid">
+    <div *ngFor="let product of filteredProducts; trackBy: trackByProductId" class="product-row-card" [title]="getProductTooltip(product)">
+      <div class="product-row-img-wrap">
+        <img *ngIf="product.mainImageUrl" [src]="product.mainImageUrl" [alt]="product.displayName" class="product-row-img" />
+        <img *ngIf="!product.mainImageUrl" src="https://via.placeholder.com/240x180?text=No+Image" alt="No Image" class="product-row-img" />
+      </div>
+      <div class="product-row-info">
+        <h2 class="product-row-title">{{ product.displayName }}</h2>
+        <p class="product-row-desc">{{ product.description }}</p>
+        <div class="price">₹{{ product.price?.toFixed(2) || '0.00' }}</div>
+        <div class="stock-info" [class.low-stock]="product.stock <= 5" [class.out-of-stock]="product.stock <= 0">
+          Stock: {{ product.stock || 0 }}
+          <span *ngIf="product.stock <= 0" class="stock-status">Out of Stock</span>
+          <span *ngIf="product.stock > 0 && product.stock <= 5" class="stock-status">Low Stock</span>
+        </div>
+        <div class="quantity-controls">
+          <button (click)="decrementQuantity(product)" [disabled]="getQuantity(product) <= 0" class="quantity-btn minus">-</button>
+          <input type="number" min="0" [max]="product.stock" [value]="getQuantity(product)" readonly class="quantity-input">
+          <button (click)="incrementQuantity(product)" [disabled]="getQuantity(product) >= product.stock" class="quantity-btn plus">+</button>
+        </div>
+        <button (click)="addToCart(product, product.variantId ? product.variant : undefined)"
+                [disabled]="product.stock <= 0 || getQuantity(product) <= 0"
+                [class.disabled]="product.stock <= 0 || getQuantity(product) <= 0"
+                [class.active]="getQuantity(product) > 0"
+                class="add-to-cart-btn">
+          {{ product.stock <= 0 ? 'Out of Stock' : 'Add to Cart' }}
+        </button>
+      </div>
+    </div>
+    
+    <!-- No products found message -->
+    <div *ngIf="filteredProducts.length === 0" class="no-products-found">
+      <h3>No products found</h3>
+      <p>Try adjusting your search criteria or filters.</p>
+      <button *ngIf="selectedCategory || selectedSubcategory || searchTerm" (click)="clearAllFilters()" class="clear-filters-btn">Clear All Filters</button>
+    </div>
+  </section>
+
+  <div *ngIf="toastMessage" class="custom-toast" [class.show]="toastVisible">
+    {{ toastMessage }}
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div>
+        <h3>About</h3>
+        <p>Your one-stop shop for all your needs. Fresh products, best deals, and fast delivery!</p>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <p>Email: support&#64;example.com</p>
+        <p>Phone: +1 234 567 890</p>
+      </div>
+      <div>
+        <h3>Follow Us</h3>
+        <p>
+          <a href="#">Instagram</a> |
+          <a href="#">Facebook</a> |
+          <a href="#">Twitter</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025. All rights reserved.
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,109 @@
+<div class="add-product-container">
+  <h3>Add New Product</h3>
+  <div class="product-type-tabs">
+    <button type="button" [class.active]="productType==='withVariants'" (click)="setProductType('withVariants')">With Variants</button>
+    <button type="button" [class.active]="productType==='withoutVariants'" (click)="setProductType('withoutVariants')">Without Variants</button>
+  </div>
+
+  <!-- With Variants Form -->
+  <form *ngIf="productType==='withVariants'" [formGroup]="productFormWithVariants" (ngSubmit)="onSubmitWithVariants()">
+    <div class="form-row">
+      <label>Name</label>
+      <input formControlName="name" required />
+    </div>
+    <div class="form-row">
+      <label>Description</label>
+      <textarea formControlName="description" required></textarea>
+    </div>
+    <div class="form-row">
+      <label>Category</label>
+      <select formControlName="categoryId" (change)="onCategoryChange($event, 'withVariants')" required>
+        <option value="">Select a category...</option>
+        <option *ngFor="let category of categories" [value]="category.categoryId">{{ category.name }}</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Subcategory</label>
+      <select formControlName="subcategoryId" required>
+        <option value="">Select a subcategory...</option>
+        <option *ngFor="let subcategory of subcategoriesWithVariants" [value]="subcategory.subcategoryId">{{ subcategory.name }}</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Main Image URL <span class="required">*</span></label>
+      <input formControlName="mainImageUrl" type="url" placeholder="https://example.com/image.jpg" required />
+    </div>
+    <div class="form-row">
+      <label>Variants <span class="required">*</span></label>
+      <div formArrayName="variants">
+        <div *ngFor="let variant of variantsWithVariants.controls; let vi = index" [formGroupName]="vi" class="variant-row">
+          <div>
+            <label>Quantity</label>
+            <input type="number" formControlName="quantity" min="0" required />
+          </div>
+          <div>
+            <label>Price</label>
+            <input type="number" formControlName="price" min="0.01" required />
+          </div>
+          <div>
+            <label>Attributes</label>
+            <div formGroupName="attributes">
+              <div *ngFor="let key of getAttributeKeys(variant.get('attributes'))">
+                <span>{{key}}</span>
+                <input [formControlName]="key" />
+                <button type="button" (click)="removeAttributeWithVariants(vi, key)">Remove</button>
+              </div>
+              <button type="button" (click)="addAttributeWithVariants(vi)">Add Attribute</button>
+            </div>
+          </div>
+          <button type="button" (click)="removeVariantWithVariants(vi)" *ngIf="variantsWithVariants.length > 1">Remove Variant</button>
+        </div>
+      </div>
+      <button type="button" (click)="addVariantWithVariants()">Add Variant</button>
+    </div>
+    <button type="submit" class="submit-btn">Add Product (With Variants)</button>
+    <div *ngIf="successMessageWithVariants" class="success-msg">{{ successMessageWithVariants }}</div>
+    <div *ngIf="errorMessageWithVariants" class="error-msg">{{ errorMessageWithVariants }}</div>
+  </form>
+
+  <!-- Without Variants Form -->
+  <form *ngIf="productType==='withoutVariants'" [formGroup]="productFormWithoutVariants" (ngSubmit)="onSubmitWithoutVariants()">
+    <div class="form-row">
+      <label>Name</label>
+      <input formControlName="name" required />
+    </div>
+    <div class="form-row">
+      <label>Description</label>
+      <textarea formControlName="description" required></textarea>
+    </div>
+    <div class="form-row">
+      <label>Category</label>
+      <select formControlName="categoryId" (change)="onCategoryChange($event, 'withoutVariants')" required>
+        <option value="">Select a category...</option>
+        <option *ngFor="let category of categories" [value]="category.categoryId">{{ category.name }}</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Subcategory</label>
+      <select formControlName="subcategoryId" required>
+        <option value="">Select a subcategory...</option>
+        <option *ngFor="let subcategory of subcategoriesWithoutVariants" [value]="subcategory.subcategoryId">{{ subcategory.name }}</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Quantity <span class="required">*</span></label>
+      <input formControlName="quantity" type="number" min="0" required />
+    </div>
+    <div class="form-row">
+      <label>Price <span class="required">*</span></label>
+      <input formControlName="price" type="number" min="0.01" step="0.01" required />
+    </div>
+    <div class="form-row">
+      <label>Main Image URL <span class="required">*</span></label>
+      <input formControlName="mainImageUrl" type="url" placeholder="https://example.com/image.jpg" required />
+    </div>
+    <button type="submit" class="submit-btn">Add Product (Without Variants)</button>
+    <div *ngIf="successMessageWithoutVariants" class="success-msg">{{ successMessageWithoutVariants }}</div>
+    <div *ngIf="errorMessageWithoutVariants" class="error-msg">{{ errorMessageWithoutVariants }}</div>
+  </form>
+</div>

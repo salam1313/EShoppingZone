@@ -1,0 +1,71 @@
+<div class="inventory-container">
+  <h3>📦 Manage Inventory</h3>
+
+  <div class="search-section">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      placeholder="🔍 Search products by name..."
+      class="search-input"
+      (input)="filterProducts()"
+    />
+  </div>
+
+  <div class="products-pro-grid" *ngIf="filteredProducts.length > 0">
+    <div *ngFor="let product of filteredProducts" class="pro-product-card">
+      <div class="pro-product-img-wrap">
+        <img [src]="product.mainImageUrl || 'https://via.placeholder.com/120x120?text=No+Image'" [alt]="product.name" />
+      </div>
+      <div class="pro-product-info">
+        <div class="pro-product-title">{{ product.name }}</div>
+        <div class="pro-product-meta">
+          <span class="pro-product-stock">Stock: <strong>{{ product.quantity }}</strong></span>
+          <span class="pro-product-price">₹{{ product.price | number:'1.2-2' }}</span>
+        </div>
+        <div class="pro-product-actions">
+          <div class="pro-qty-group">
+            <input 
+              type="number" 
+              [value]="getNewQuantity(product.productId)" 
+              (input)="setNewQuantity(product.productId, $event)"
+              min="0"
+              max="999999"
+              class="pro-qty-input"
+              placeholder="Update quantity"
+            />
+            <button 
+              (click)="updateQuantity(product)"
+              [disabled]="getNewQuantity(product.productId) === product.quantity || loading"
+              class="pro-update-btn"
+              type="button"
+            >
+              {{ loading ? 'Updating...' : 'Update' }}
+            </button>
+          </div>
+          <div class="pro-quick-btns">
+            <button (click)="increaseQuantity(product, 10)" class="pro-quick-btn" type="button" [disabled]="loading" title="Add 10 units">+10</button>
+            <button (click)="increaseQuantity(product, 50)" class="pro-quick-btn" type="button" [disabled]="loading" title="Add 50 units">+50</button>
+            <button (click)="increaseQuantity(product, 100)" class="pro-quick-btn" type="button" [disabled]="loading" title="Add 100 units">+100</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="filteredProducts.length === 0 && !loading" class="no-products-pro">
+    <div class="no-products-icon-pro">📭</div>
+    <div>No products found. Try adjusting your search terms.</div>
+  </div>
+
+  <div *ngIf="loading" class="loading-pro">
+    <span class="loading-icon-pro">⏳</span> Loading products...
+  </div>
+
+  <div *ngIf="successMessage" class="success-msg-pro" role="alert">
+    ✅ {{ successMessage }}
+  </div>
+  
+  <div *ngIf="errorMessage" class="error-msg-pro" role="alert">
+    ❌ {{ errorMessage }}
+  </div>
+</div>
