@@ -28,7 +28,7 @@ describe('CategoryService', () => {
     service.getAllCategories().subscribe(categories => {
       expect(categories).toEqual(mockCategories);
     });
-    const req = httpMock.expectOne('http://localhost:5148/api/category');
+    const req = httpMock.expectOne('https://eshoppingzone.onrender.com/api/category');
     expect(req.request.method).toBe('GET');
     req.flush(mockCategories);
   });
@@ -38,7 +38,7 @@ describe('CategoryService', () => {
     service.addCategory(newCategory).subscribe(res => {
       expect(res).toBeTruthy();
     });
-    const req = httpMock.expectOne('http://localhost:5148/api/category');
+    const req = httpMock.expectOne('https://eshoppingzone.onrender.com/api/category');
     expect(req.request.method).toBe('POST');
     req.flush({ success: true });
   });

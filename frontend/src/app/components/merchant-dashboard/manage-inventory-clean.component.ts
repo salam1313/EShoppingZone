@@ -19,7 +19,7 @@ export class ManageInventoryComponent implements OnInit {
   errorMessage = '';
   quantityMap: { [key: string]: number } = {};
 
-  private API_BASE = 'http://localhost:5148';
+  private API_BASE = 'https://eshoppingzone.onrender.com/';
 
   constructor(private http: HttpClient) {}
 

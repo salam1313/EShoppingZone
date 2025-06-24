@@ -137,7 +137,7 @@ export class AddProductComponent implements OnInit {
     };
     // Use a dedicated endpoint for products with variants
     const token = localStorage.getItem('token');
-    this.http.post<any>('http://localhost:5148/api/product/with-variants', payload, {
+    this.http.post<any>('https://eshoppingzone.onrender.com/api/product/with-variants', payload, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -180,7 +180,7 @@ export class AddProductComponent implements OnInit {
     };
     // Use a dedicated endpoint for products without variants
     const token = localStorage.getItem('token');
-    this.http.post<any>('http://localhost:5148/api/product/without-variants', payload, {
+    this.http.post<any>('https://eshoppingzone.onrender.com/api/product/without-variants', payload, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`

@@ -13,7 +13,7 @@ export class MyProductsComponent implements OnInit {
   products: any[] = [];
   loading = false;
   errorMessage = '';
-  private API_BASE = 'http://localhost:5148';
+  private API_BASE = 'https://eshoppingzone.onrender.com/';
 
   // Modal state
   showDeleteModal = false;

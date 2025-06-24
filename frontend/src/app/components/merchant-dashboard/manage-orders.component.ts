@@ -81,7 +81,7 @@ export class ManageOrdersComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.get<Order[]>('http://localhost:5148/api/m/order', { headers })
+    this.http.get<Order[]>('https://eshoppingzone.onrender.com/api/m/order', { headers })
       .subscribe({
         next: (orders) => {
           this.orders = orders;
@@ -101,7 +101,7 @@ export class ManageOrdersComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.get<OrdersSummary>('http://localhost:5148/api/m/order/summary', { headers })
+    this.http.get<OrdersSummary>('https://eshoppingzone.onrender.com/api/m/order/summary', { headers })
       .subscribe({
         next: (summary) => {
           this.ordersSummary = summary;
@@ -126,7 +126,7 @@ export class ManageOrdersComponent implements OnInit {
     const payload = { orderId: orderId, status: newStatus };
 
     // Correct endpoint: no orderId in URL
-    this.http.put('http://localhost:5148/api/m/order', payload, { headers })
+    this.http.put('https://eshoppingzone.onrender.com/api/m/order', payload, { headers })
       .subscribe({
         next: () => {
           this.success = 'Order status updated successfully';

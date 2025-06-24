@@ -13,7 +13,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  readonly API_BASE = 'http://localhost:5148'; // Updated to match current backend URL
+  readonly API_BASE = 'https://eshoppingzone.onrender.com'; // Updated to Render backend URL
   loginType: string = 'user';
   email: string = '';
   password: string = '';
