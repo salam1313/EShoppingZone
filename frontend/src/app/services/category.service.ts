@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private API_BASE = 'http://localhost:5148/api/category';
+  private API_BASE = 'https://eshoppingzone.onrender.com/api/category';
 
   constructor(private http: HttpClient) {}
 

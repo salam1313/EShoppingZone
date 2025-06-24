@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
-  private API_BASE = 'http://localhost:5148/api/order';
+  private API_BASE = 'https://eshoppingzone.onrender.com/api/order';
 
   constructor(private http: HttpClient) {}
 

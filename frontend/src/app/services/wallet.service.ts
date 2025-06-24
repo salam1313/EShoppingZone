@@ -13,7 +13,7 @@ export interface WalletTransaction {
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
-  private API_BASE = 'http://localhost:5148/api/wallet';
+  private API_BASE = 'https://eshoppingzone.onrender.com/api/wallet';
 
   constructor(private http: HttpClient) {}
 

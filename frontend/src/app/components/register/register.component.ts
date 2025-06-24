@@ -13,7 +13,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  readonly API_BASE = 'http://localhost:5148'; // Updated to match current backend port
+  readonly API_BASE = 'https://eshoppingzone.onrender.com'; // Updated to Render backend
   registerType: string = 'user';
   name: string = '';
   email: string = '';
